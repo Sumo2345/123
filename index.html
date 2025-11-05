@@ -34,7 +34,7 @@ let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTip
 
 /* ========== 气泡：限数 + 定时淘汰（无动画自毁） ========== */
 const queue = [];          // 生成顺序队列
-const MAX   = 150;         // 同时存在上限
+const MAX   = 80;         // 同时存在上限
 
 function spawn(){
   if (tips.length === 0) tips = shuffle([...rawTips]);
@@ -71,4 +71,5 @@ setInterval(spawn, 250);
 </script>
 </body>
 </html>
+
 
