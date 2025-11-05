@@ -1,28 +1,30 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>❤Love you❤</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:linear-gradient(135deg,#ffeef8,#e0c3fc);font-family:-apple-system,PingFang SC,Helvetica,Arial;position:relative}
-.bubble{
-  position:absolute;background:#fff;border-radius:1em;box-shadow:0 .3em 1em rgba(0,0,0,.15);
-  color:#333;opacity:0;transform:scale(.3) rotate(var(--r));animation:pop .6s forwards;
-  display:flex;align-items:center;justify-content:center;padding:.6em 1em;
-  max-width:90vw;max-height:90vh;word-break:break-all;
-}
-@keyframes pop{to{opacity:1;transform:scale(1) rotate(var(--r))}}
-</style>
+  <meta charset="utf-8">
+  <!-- 关键：禁止 iframe 缩放 + 强制全屏 -->
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>❤Love you❤</title>
+  <style>
+    /* 其它样式不变，只把 body 改成下面这样 */
+    body {
+      margin: 0;
+      width: 100vw;
+      min-height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffeef8, #e0c3fc);
+      font-family: -apple-system, PingFang SC, Helvetica, Arial;
+      position: relative;
+    }
+  </style>
 </head>
 <body>
 <script>
 /* ========== 用户可调参数 ========== */
 const cfg = {
-  bubbleWidth: 1000,  // px
-  bubbleHeight: 200,  // px
-  fontSize: 80,      // px
+  bubbleWidth: 1400,  // px
+  bubbleHeight: 400,  // px
+  fontSize: 100,      // px
   eachCount: 3       // 每条文本出现几次（完全一致）
 };
 
@@ -83,7 +85,7 @@ function spawn() {
 setInterval(() => {
     if (tips.length === 0) tips = shuffle([...rawTips]); // 每条1次即循环
     spawn();
-}, 230); // 例如 800
+}, 300); // 例如 800
 
 /* ========== 后续补充（直到池子用完） ========== */
 const addTimer = setInterval(() => {
@@ -92,5 +94,4 @@ const addTimer = setInterval(() => {
 }, random(600, 1600));
 </script>
 </body>
-
 </html>
