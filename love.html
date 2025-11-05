@@ -20,13 +20,13 @@
 <div id="mask" style="position:fixed;inset:0;background:rgba(0,0,0,.6);color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;font-size:6vw;cursor:pointer;">点我❤</div>
 
 <script>
-/* ========== 音乐（可换路径）+ 点屏播放 ========== */
-const bgmSrc = './mci.mp3';   // 同目录相对路径
+/* 音乐：相对路径 + 点屏播放 */
+const bgmSrc = './music.mp3';   // ① 放同目录 ② 英文 ③ 无空格
 const bgm = new Audio(bgmSrc);
 bgm.loop = true;
 bgm.muted = true;
-bgm.load();
-bgm.play().catch(()=>{});
+bgm.load();                         // 强制加载
+bgm.play().catch(()=>{});           // 先静音播
 
 /* 点屏消失 + 解除静音（一次性）*/
 const mask = document.getElementById('mask');
@@ -77,3 +77,4 @@ setInterval(spawn, 250);
 </script>
 </body>
 </html>
+
