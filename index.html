@@ -33,8 +33,9 @@ const rawTips = ["我想你了","别熬夜","保持微笑呀","刘雨婷是最�
 let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips); function shuffle(arr){ for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; } tips = shuffle(tips); function random(min, max){ return Math.random() * (max - min) + min; }
 
 /* ========== 先进先出队列：超 150 立即销毁队头 ========== */
-const queue = [];          // 保存 DOM 引用
-const MAX   = 150;         // 同时存在上限
+/* ========== 先进先出队列：超 150 才销毁 ========== */
+const queue = [];
+const MAX   = 150;
 
 function spawn(){
   if (tips.length === 0) tips = shuffle([...rawTips]);
@@ -54,23 +55,19 @@ function spawn(){
   div.style.left = left + 'vw';
   div.style.top  = top + 'vh';
 
-  /* 动画完自毁 + 出队 */
-  div.addEventListener('animationend', () => {
-    div.remove();
-    queue.shift();          // 从队头删除
-  });
+  /* 不再自己 remove，只由队列控制 */
+  // div.addEventListener('animationend', () => div.remove());   ← 删掉
 
   document.body.appendChild(div);
   queue.push(div);          // 入队
 
-  /* 超 150 → 立即销毁队头（同速）*/
+  /* 超 150 → 销毁队头（统一淘汰）*/
   if (queue.length > MAX) {
     const first = queue.shift();
     if (first) first.remove();
   }
 }
 
-/* 匀速循环，永不停止 */
 setInterval(spawn, 250);
 </script>
 </body>
