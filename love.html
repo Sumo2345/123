@@ -18,7 +18,7 @@
 <body>
 <script>
 /* ========== ① 换音乐：填写本地路径或网络 mp3 ========== */
-const bgmSrc = '""C:\Users\苏陌不吃鱼\Downloads\obj_wo3DlMOGwrbDjj7DisKw_14096444542_bafc_a068_39f8_9a9e06e5634410b5e7e81df24749e656.mp3""'; // ← 改成你的音乐地址
+const bgmSrc = './obj_wo3DlMOGwrbDjj7DisKw_14096444542_bafc_a068_39f8_9a9e06e5634410b5e7e81df24749e656.mp3'; // ← 改成你的音乐地址
 
 /* ========== ② 自动播放（静音→用户点屏后解除静音） ========== */
 const bgm = new Audio(bgmSrc);
@@ -41,3 +41,4 @@ let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTip
 </script>
 </body>
 </html>
+
