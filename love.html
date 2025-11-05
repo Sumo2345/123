@@ -20,24 +20,14 @@
 <div id="mask" style="position:fixed;inset:0;background:rgba(0,0,0,.6);color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;font-size:6vw;cursor:pointer;">点我❤</div>
 
 <script>
-/* 音乐：相对路径 + 点屏播放 */
+/* ========== 音乐：相对路径 + 点屏播放 ========== */
 const bgmSrc = 'https://m701.music.126.net/20251105215628/ab6dc808f5251bd1fe78eb4425c0a43d/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096444542/bafc/a068/39f8/9a9e06e5634410b5e7e81df24749e656.mp3?vuutv=txY1SvxDNImkGQ4yZ+NJP5D3fH/ASYJPUsWgwg7fKqCCErZKDy30gG8BkfBYl9N2wf6z4rU5ImuzCfEKrxj2/A75kGTzgdRN2en+hSJkHK+M3K+gnHofU39/y0qKonCNFyenCbbf7yMFtUiqI2bVJA==&cdntag=bWFyaz1vc193ZWIscXVhbGl0eV9zdGFuZGFyZA';   // ① 放同目录 ② 英文 ③ 无空格
 const bgm = new Audio(bgmSrc);
 bgm.loop = true;
-bgm.muted = true;
-bgm.load();                         // 强制加载
-bgm.play().catch(()=>{});           // 先静音播
-
-/* 点屏消失 + 解除静音（一次性）*/
-const mask = document.getElementById('mask');
-document.body.addEventListener('touchstart', () => {
-  mask && mask.remove();
-  if (bgm.muted) { bgm.muted = false; bgm.play().catch(()=>{}); }
-}, { once: true });
 
 /* ========== 气泡参数 ========== */
 const cfg = { bubbleWidth: 45, bubbleHeight: 9, fontSize: 3, eachCount: 1 };
-const rawTips = ["我想你了","别熬夜","保持微笑呀","刘雨婷是最棒的！","顺顺利利","每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果","多喝水哦~","别焦虑哦","我爱你！！！！","一直爱你","多想我","我们会一直在一起",'我们永远不要分开','不开心就要说出来哦！','宝宝最棒啦！！','爱你~❤❤❤','不要内耗哦~','我永远爱刘雨婷','我想和你有以后❤','少生点气哦','想要一直在你身边❤'];
+const rawTips = ["我想你了","别熬夜","保持微笑呀","刘雨婷是最棒的","顺顺利利","每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果","多喝水哦~","别焦虑哦","我爱你！！！！","一直爱你","多想我","我们会一直在一起",'我们永远不要分开','不开心就要说出来哦！','宝宝最棒啦！！','爱你~❤❤❤','不要内耗哦~'];
 let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips); function shuffle(arr){ for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; } tips = shuffle(tips); function random(min, max){ return Math.random() * (max - min) + min; }
 
 /* ========== 气泡：限数 + 定时淘汰（无动画自毁） ========== */
@@ -62,22 +52,19 @@ function spawn(){
   div.style.left = left + 'vw';
   div.style.top  = top + 'vh';
 
-  /* 不再自己 remove → 永不禁播 */
   document.body.appendChild(div);
   queue.push(div);          // 入队
-
-  /* 超 80 才删队头（统一淘汰）*/
-  if (queue.length > MAX) {
-    const first = queue.shift();
-    if (first) first.remove();
-  }
+  if (queue.length > MAX) { const first = queue.shift(); if (first) first.remove(); }
 }
 
-setInterval(spawn, 250);
+/* ========== 点我❤：点击后才开始播放 + 生成气泡 ========== */
+const mask = document.getElementById('mask');
+document.body.addEventListener('touchstart', () => {
+  mask && mask.remove();           // 蒙层消失
+  bgm.muted = false;               // 解除静音
+  bgm.play().catch(()=>{});        // 开始播放
+  setInterval(spawn, 250);         // 启动气泡循环
+}, { once: true });
 </script>
 </body>
 </html>
-
-
-
-
