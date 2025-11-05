@@ -2,70 +2,51 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <!-- 关键：禁止 iframe 缩放 + 强制全屏 -->
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>❤Love you❤</title>
   <style>
-    /* ========== 基础样式（只留气泡） ========== */
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;overflow:hidden;background:linear-gradient(135deg,#ffeef8,#e0c3fc);font-family:-apple-system,PingFang SC,Helvetica,Arial;position:relative}
     .bubble{
-      position:absolute;background:#fff;border-radius:1em;box-shadow:0 .3em 1em rgba(0,0,0,.15);
-      color:#333;opacity:0;transform:scale(.3) rotate(var(--r));animation:pop .6s forwards;
-      display:flex;align-items:center;justify-content:center;padding:.6em 1em;
-      max-width:90vw;max-height:90vh;word-break:break-all;
+      position:absolute;background:#fff;border-radius:1em;box-shadow:0 .4em 1.2em rgba(0,0,0,.18), 0 .1em .3em rgba(0,0,0,.1);
+      color:#333;opacity:0;transform:scale(.3) rotate(var(--r));animation:pop .6s cubic-bezier(.18,.89,.32,1.28) forwards;
+      display:flex;align-items:center;justify-content:center;padding:.6em 1em;max-width:90vw;max-height:90vh;word-break:break-all;
     }
-    @keyframes pop{to{opacity:1;transform:scale(1) rotate(var(--r))}}
+    @keyframes pop{0%{opacity:0;transform:scale(.3) rotate(var(--r));}60%{opacity:1;transform:scale(1.05) rotate(var(--r));}100%{opacity:1;transform:scale(1) rotate(var(--r));}}
   </style>
 </head>
 <body>
 <script>
-/* ========== ① 尺寸改成「相对单位」 ========== */
-const cfg = {
-  bubbleWidth:  50,   // vw
-  bubbleHeight: 9,   // vh
-  fontSize:     4,    // vw
-  eachCount:    1     // 每条出现次数
-};
+/* ========== 音乐（原封不动） ========== */
+const bgmSrc = 'https://m701.music.126.net/20251105205508/f3f5ea8b5e33cda0655dbd6eb0ab46ed/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096444542/bafc/a068/39f8/9a9e06e5634410b5e7e81df24749e656.mp3?vuutv=3Im8kor23Y4vauBFlO044PqBqRicqtIcK8dm0N0WkKwMT9jnzZeMBKTa6Rlt/Vx9bikTHXEnVZVrl9QZ+kP3zPrYrL01mllnCFuUh7HIAlbWHS2a3KnI1lzRlzzVrnGA69h0DBGwnhBhUaNhSaW/VQ==&cdntag=bWFyaz1vc193ZWIscXVhbGl0eV9zdGFuZGFyZA';
+const bgm = new Audio(bgmSrc);
+bgm.loop = true;
+bgm.muted = true;
+bgm.play().catch(()=>{});
+document.body.addEventListener('touchstart', () => {
+  if (bgm.muted) { bgm.muted = false; bgm.play().catch(()=>{}); }
+}, { once: true });
 
-/* ========== ② 文本池 ========== */
-const rawTips = [
-  "我想你了","别熬夜","保持微笑呀","刘雨婷是最棒的","顺顺利利",
-  "每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果",
-  "多喝水哦~","别焦虑哦","我爱你！！！！","一直爱你","多想我","我们会一直在一起"
-];
+/* ========== 气泡参数 ========== */
+const cfg = { bubbleWidth: 45, bubbleHeight: 9, fontSize: 3, eachCount: 1 };
+const rawTips = ["我想你了","别熬夜","保持微笑呀","刘雨婷是最棒的","顺顺利利","每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果","多喝水哦~","别焦虑哦","我爱你！！！！","一直爱你","多想我","我们会一直在一起",'我们永远不要分开','不开心就要说出来哦！','宝宝最棒啦！！','爱你~❤❤❤','不要内耗哦~'];
+let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips); function shuffle(arr){ for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; } tips = shuffle(tips); function random(min, max){ return Math.random() * (max - min) + min; }
 
-/* ========== ③ 生成「每条出现次数一致」的总池子 ========== */
-let tips = [];
-for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips);
-function shuffle(arr){
-  for (let i = arr.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-tips = shuffle(tips);
+/* ========== 先进先出队列：超 150 立即销毁队头 ========== */
+const queue = [];          // 保存 DOM 引用
+const MAX   = 150;         // 同时存在上限
 
-/* ========== ④ 工具函数 ========== */
-function random(min, max){ return Math.random() * (max - min) + min; }
-
-/* ========== ⑤ 创建气泡 ========== */
 function spawn(){
-  if (tips.length === 0) tips = shuffle([...rawTips]); // 循环用
+  if (tips.length === 0) tips = shuffle([...rawTips]);
   const div = document.createElement('div');
   div.className = 'bubble';
   div.textContent = tips.pop();
-
-  /* 相对尺寸 → 手机/电脑自动等比 */
-  div.style.width  = cfg.bubbleWidth + 'vw';
+  div.style.width = cfg.bubbleWidth + 'vw';
   div.style.height = cfg.bubbleHeight + 'vh';
   div.style.fontSize = cfg.fontSize + 'vw';
-
-  /* 随机旋转 & 位置（留边 2vw） */
-  const rot = random(-12, 12);
+  const rot = random(-20, 20);
   div.style.setProperty('--r', rot + 'deg');
-  const pad = 2; // vw
+  const pad = 0.5;
   const maxLeft = 100 - cfg.bubbleWidth - pad;
   const maxTop  = 100 - cfg.bubbleHeight - pad;
   const left = random(pad, Math.max(pad, maxLeft));
@@ -73,12 +54,24 @@ function spawn(){
   div.style.left = left + 'vw';
   div.style.top  = top + 'vh';
 
+  /* 动画完自毁 + 出队 */
+  div.addEventListener('animationend', () => {
+    div.remove();
+    queue.shift();          // 从队头删除
+  });
+
   document.body.appendChild(div);
+  queue.push(div);          // 入队
+
+  /* 超 150 → 立即销毁队头（同速）*/
+  if (queue.length > MAX) {
+    const first = queue.shift();
+    if (first) first.remove();
+  }
 }
 
-/* ========== ⑥ 均匀循环（无首轮扎堆） ========== */
+/* 匀速循环，永不停止 */
 setInterval(spawn, 250);
 </script>
 </body>
-
 </html>
