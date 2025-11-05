@@ -18,14 +18,20 @@
 <body>
 <script>
 /* ========== ① 换音乐：填写本地路径或网络 mp3 ========== */
-const bgmSrc = 'https://m701.music.126.net/20251105205508/f3f5ea8b5e33cda0655dbd6eb0ab46ed/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096444542/bafc/a068/39f8/9a9e06e5634410b5e7e81df24749e656.mp3?vuutv=3Im8kor23Y4vauBFlO044PqBqRicqtIcK8dm0N0WkKwMT9jnzZeMBKTa6Rlt/Vx9bikTHXEnVZVrl9QZ+kP3zPrYrL01mllnCFuUh7HIAlbWHS2a3KnI1lzRlzzVrnGA69h0DBGwnhBhUaNhSaW/VQ==&cdntag=bWFyaz1vc193ZWIscXVhbGl0eV9zdGFuZGFyZA'; // ← 改成你的音乐地址
-
-/* ========== ② 自动播放（静音→用户点屏后解除静音） ========== */
+/* ========== 音乐：可换路径 + 点屏播放 ========== */
+const bgmSrc = 'https://m701.music.126.net/20251105212728/4f427560199606f63c2bf0e207a85992/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096444542/bafc/a068/39f8/9a9e06e5634410b5e7e81df24749e656.mp3?vuutv=BpVU/8TeawBc+X2DK5+YOPZwduowjRyTmuTjru4LrKEpu/0425fPZeFSn+JddOG63h0bGrIjEAAUGVvVgyXOmXvwqCsqbSfgW6rur6hdcFTpXtPsIU9uzybKubo/ha6Txz89+ChH5xOLEdrdtcCtuQ==&cdntag=bWFyaz1vc193ZWIscXVhbGl0eV9zdGFuZGFyZA'; // ① 先测试
 const bgm = new Audio(bgmSrc);
-bgm.loop = true;      // 循环播放
-bgm.muted = true;     // 先静音（iOS/微信要求）
-bgm.play().catch(()=>{}); // 立即尝试播放（失败也无感）
+bgm.loop = true;
+bgm.muted = true;
+bgm.load();                         // 强制加载
+bgm.play().catch(()=>{});           // 先静音播
 
+document.body.addEventListener('touchstart', () => {
+  if (bgm.muted) {
+    bgm.muted = false;
+    bgm.play().catch(()=>{});
+  }
+}, { once: true });
 /* 第一次点屏幕 → 解除静音 + 继续播放 */
 document.body.addEventListener('touchstart', () => {
   if (bgm.muted) {
@@ -78,5 +84,6 @@ setInterval(spawn, 250);
 </script>
 </body>
 </html>
+
 
 
