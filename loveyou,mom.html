@@ -17,7 +17,7 @@
 </head>
 <body>
     <!-- 初始蒙层：点我❤ -->
-    <div id="mask" style="position:fixed;inset:0;background:rgba(0,0,0,.6);color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;font-size:6vw;cursor:pointer;">不争气的儿子给你的祝福</div>
+    <div id="mask" style="position:fixed;inset:0;background:rgba(0,0,0,.6);color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;font-size:6vw;cursor:pointer;">🎇不争气的儿子给你的祝福🎇<br>点一下</div>
 
 <script>
     /* ========== 音乐：相对路径 + 点屏播放 ========== */
@@ -28,7 +28,7 @@
     
     /* ========== 气泡参数 ========== */
     const cfg = { bubbleWidth: 45, bubbleHeight: 9, fontSize: 3, eachCount: 1 };
-    const rawTips = ["我想你了老妈","别熬夜","保持微笑呀","你是最棒的","顺顺利利","每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果","多喝水哦~","别焦虑哦","我爱你！！！！","多想我",'不开心就要说出来哦！','你就是超人','不要内耗哦~'];
+    const rawTips = ["我想你了老妈","别熬夜","保持微笑呀","你是最棒的","顺顺利利","每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果","多喝水哦~","别焦虑哦","我爱你！！！！","多想我",'不开心就要说出来哦！','你就是超人','不要内耗哦~','工作第二，身体第一','今年一定会少生病','烦恼都消失'];
     let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips); function shuffle(arr){ for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; } tips = shuffle(tips); function random(min, max){ return Math.random() * (max - min) + min; }
     
     /* ========== 气泡：限数 + 定时淘汰（无动画自毁） ========== */
